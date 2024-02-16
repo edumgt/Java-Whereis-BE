@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.ssafy.live.model.mapper.DongCodeMapper">
+	<select id="getSidoName" resultType="dongCode">
+		select *
+		from dongcode
+		where right(dongCode,8) = '00000000'
+	</select>
+	<select id="getGugunName" resultType="dongCode">
+		select *
+		from dongcode
+		where left(dongCode,2) = #{sidoCode} and dongName is null and gugunName is not null
+	</select>
+	<select id="getDongName" resultType="dongCode">
+		select *
+		from dongcode
+		where left(dongCode,5) = #{code} and dongName is not null
+	</select>
+	
+</mapper>
+

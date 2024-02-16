@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.ssafy.live.model.mapper.UserMapper">
+
+<resultMap type="User" id="AdminUserAll" extends="user">
+	<result column="user_id" property="userId"/>
+	<result column="user_password" property="userPwd"/>
+	<result column="email_id" property="emailId"/>
+	<result column="email_domain" property="emailDomain"/>
+	<result column="manager" property="manager"/>
+</resultMap>
+
+<resultMap type="User" id="user">
+	<result column="user_id" property="userId"/>
+	<result column="user_name" property="userName"/>
+</resultMap>
+
+<resultMap type="User" id="userAll" extends="user">
+	<result column="user_password" property="userPwd"/>
+	<result column="email_id" property="emailId"/>
+	<result column="email_domain" property="emailDomain"/>
+	<result column="manager" property="manager"/>
+</resultMap>
+
+<!-- 회원 로그인 -->
+<select id="login" parameterType="map" resultMap="user">
+	select
+	user_id, user_name, manager
+	from user
+	where user_id = #{id} and
+	user_password = #{pwd}
+</select>
+
+<!-- 회원가입 -->
+<insert id="regist" parameterType="User">
+	insert into user 
+	(user_id, user_name, user_password, email_id, email_domain)
+	values (#{userId}, #{userName}, #{userPwd}, #{emailId}, #{emailDomain})
+</insert>
+
+<!-- 회원 ID 찾기 -->
+<select id="findId" resultType="string">
+	select user_id
+	from user
+	where user_name=#{userName} and email_id = #{emailId} and email_domain = #{emailDomain}
+</select>
+
+<!-- 회원 PWD 찾기 -->
+<select id="findPwd" resultType="string">
+	select user_password
+	from user
+	where user_id=#{userId} and email_id = #{emailId} and email_domain = #{emailDomain}
+</select>
+
+<!-- 회원 정보 확인 -->
+<select id="confirm" parameterType="string" resultMap="userAll">
+	select user_id, user_name, email_id, email_domain, user_password
+	from user where user_id=#{userId}
+</select>
+
+<!-- 회원 정보 수정 -->
+<update id="update" parameterType="User">
+			update user
+		<trim prefix="set" suffixOverrides=",">
+			<if test="userPwd != null">user_password = #{userPwd},</if>
+			<if test="userName != null">user_name = #{userName},</if>
+			<if test="emailId != null">email_id = #{emailId},</if>
+			<if test="emailDomain != null">email_domain = #{emailDomain},</if>
+		</trim>
+		where user_id = #{userId}
+</update>
+
+<!-- 회원 정보 삭제 -->
+<delete id="delete" parameterType="string">
+	delete from user
+	where user_id = #{userId}
+</delete>
+
+<!-- 회원 전체 조회 -->
+<select id="selectAll" resultMap="AdminUserAll">
+	select user_name, user_id,user_password, email_id, email_domain,manager
+	from user
+</select>
+
+<!-- 권한 바꾸기 -->
+<update id="changePermission">
+	update user set
+	manager = #{manager}
+	where user_id = #{userId}
+</update>
+
+</mapper>
+
