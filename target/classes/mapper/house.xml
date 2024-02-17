@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.ssafy.live.model.mapper.HouseMapper">
+	<select id="getApartList" resultMap="homedeal" parameterType="map">
+		select hi.aptCode hi_aptCode,hi.dongCode, hi.buildYear, hi.apartmentName, hi.dong,  hd.area, hi.jibun, hi.lng, hi.lat, hi.img,
+		hd.aptCode hd_aptCode, hd.floor, hd.dealAmount, hd.dealYear,hd.dealMonth
+		from houseinfo hi
+		join housedeal hd on hi.aptCode = hd.aptCode
+		where hi.dongCode= #{dongCode}
+	</select>
+	<resultMap type="House" id="homedeal">
+		<id column="hi_aptCode" property ="aptCode"/>
+		<result column="buildYear" property="buildYear"/>
+		<result column="apartmentName" property="apartmentName"/>
+		<result column="dong" property="dong"/>
+		<result column="jibun" property="jibun"/>
+		<result column="lng" property="lng"/>
+		<result column="lat" property="lat"/>
+		<result column="img" property="img"/>
+		<collection property="houseDeals" javaType="list" ofType="housedeal">
+			<result column="hd_aptCode" property="aptCode"/>
+			<result column="floor" property="floor"/>
+			<result column="area" property="area"/>
+			<result column="dealAmount" property="dealAmount"/>
+			<result column="dealYear" property="dealYear"/>
+			<result column="dealMonth" property="dealMonth"/>
+		</collection>
+	</resultMap>
+	
+	<select id="getGugunsApartList" resultMap="homedeal" parameterType="map">
+		select hi.aptCode hi_aptCode,hi.dongCode, hi.buildYear, hi.apartmentName, hi.dong,  hd.area, hi.jibun, hi.lng, hi.lat, hi.img,
+		hd.aptCode hd_aptCode, hd.floor, hd.dealAmount, hd.dealYear,hd.dealMonth
+		from houseinfo hi
+		join housedeal hd on hi.aptCode = hd.aptCode
+		where hi.dongCode like #{dongCode}
+	</select>
+	
+	<select id="selectAllMyHouse" resultType="House">
+		select distinct aptCode, buildYear, apartmentName, dong, jibun
+		from houseinfo
+		where aptCode in (select aptCode from myhouse where user_id = #{user_id})
+	</select>
+	
+	<delete id="delMyHouse">
+		delete from myhouse where aptCode = #{aptCode} and user_id = #{user_id}
+	</delete>
+	<delete id="delAllMyHouse">
+		delete from myhouse where user_id = #{user_id}
+	</delete>
+	<insert id="insertMyHouse" parameterType="MyHouse">
+		insert into myhouse (user_id, aptCode) values (#{user_id}, #{aptCode})
+	</insert>
+</mapper>
+

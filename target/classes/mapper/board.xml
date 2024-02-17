@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.ssafy.live.model.mapper.BoardMapper">
+
+	<resultMap type="Board" id="board">
+		<result column="article_no" property="articleNo"/>
+		<result column="user_id" property="userId"/>
+		<result column="subject" property="subject"/>
+		<result column="content" property="content"/>
+		<result column="hit" property="hit"/>
+		<result column="register_time" property="registerTime"/>
+	</resultMap>
+	
+	<resultMap type="Board" id="boardAll">
+		<result column="user_id" property="userId"/>
+		<result column="user_name" property="userName"/>
+		<result column="bullet" property="bullet"/>
+	</resultMap>
+	
+	<resultMap type="Board" id="article">
+		<result column="article_no" property="articleNo"/>
+		<result column="subject" property="subject"/>
+		<result column="register_time" property="registerTime"/>
+	</resultMap>
+	
+	<!-- 글쓰기  -->
+	<insert id="writeBoard" parameterType="Board">
+		insert into board
+		(user_id, subject, content, hit, register_time, bullet)
+		values (#{userId}, #{subject}, #{content}, 0, now(), #{bullet})
+	</insert>
+	
+	<!-- 글 수정 -->
+	<update id="updateBoard" parameterType="Board">
+		update board
+		set subject = #{subject}, content = #{content}
+		where article_no = #{articleNo}
+	</update>
+	
+	<!-- 글 목록 -->
+	<select id="getBoardList" resultMap="article">
+		select b.article_no, b.user_id, b.subject, b.content, b.hit, b.register_time, m.user_name, b.bullet
+		from board b, user m 
+		where b.user_id = m.user_id
+	</select>
+	
+	<!-- 글 상세확인 -->
+	<select id="getDetailList" parameterType="int" resultMap="boardAll">
+		select b.article_no, b.user_id, b.subject, b.content, b.hit, b.register_time, m.user_name , b.bullet
+		from board b, user m
+		where b.user_id = m.user_id
+		and b.article_no = #{articleNo}
+	</select>
+	
+	<!-- 글 삭제 -->
+	<delete id="deleteList" parameterType="int">
+		delete from board
+		where article_no = #{articleNo}
+	</delete>
+	
+	<!-- 조회수  -->
+	<update id="updateHit" parameterType="int">
+		update board
+		set hit = hit + 1
+		where article_no = #{articleNo}
+	</update>
+	
+	<!-- 검색  -->
+	<select id="getBoardSearch" parameterType="string" resultMap="article">
+		select b.article_no, b.user_id, b.subject, b.content, b.hit, b.register_time, m.user_name, b.bullet
+		from board b inner join user m
+		on b.user_id = m.user_id
+		where b.subject like concat('%', #{subject}, '%')
+	</select>
+	
+</mapper>
+
