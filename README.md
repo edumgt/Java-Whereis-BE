@@ -1,70 +1,178 @@
-## 2025-09-11
+# 🏡 WhereIsMyHome (Whereis-BE)
 
-# 🏡 WhereIsMyHome
-공공 API를 활용한 아파트 매매정보 확인 프로젝트
-<br/><br/>
-## 00. 사용 기술
-- SpringBoot
-- Vue.js
+공공 데이터(아파트 실거래/행정동 코드)와 외부 서비스(카카오맵, 네이버 부동산 뉴스)를 활용해 **아파트 정보 조회, 관심 매물 관리, 게시판, 회원 기능**을 제공하는 Spring Boot 기반 웹 애플리케이션입니다.
 
-## 01. 기획 배경 및 목표
-최근 집 가격의 변동이 컸습니다. 그 변동 폭을 한눈에 확인할 수 있도록 돕는 프로젝트를 기획해보았습니다.
-<br/>
-### 목표
-1. 매물 가격 변동을 그래프로 보여주어 한눈에 파악
-2. 부동산 뉴스의 썸네일과 제목을 통해 한눈에 파악
-3. 지도를 보여주어 매물 아파트 위치 파악
-4. 아파트 관심 매물을 등록  
-<br/><br/>
-## 02. 추진 계획
-### 📈 가격 변동 그래프
-vuetify에서 제공하는 sparkline을 활용하여 쉽게 가격 변동 폭 확인을 할 수 있게 함
-### 📰 부동산 뉴스
-JSoup을 사용한 정적 페이지 크롤링을 통해 네이버 실시간 부동산 HOT ISSUE를 제공
-### 🗺️ 지도
-카카오맵 API를 사용하여 지도 기능 제공
-### ⭐ 관심 매물
-관심 아파트 등록 기능 제공
-<br/><br/>
-## 03. 시장분석: 유사한 제품 및 서비스의 장단점 분석, 차별화 전략 기술
-### 직방
-아파트 매물에 대한 상세 정보 보여주기 기능에 가격 변동 그래프를 추가하여 사용자가 집값이 많이 올랐구나를 쉽게 느낄 수 있게 해주었다.
-### 네이버 부동산
-네이버 부동산 뉴스는 우리에게 경각심을 주는 실시간으로 준다. 이를 좀 더 한눈에 보이기 쉽게 vutiefy를 사용하여 제공했다.
-### 카카오맵
-클러스터링 api를 사용하여 구군 단위로 매물의 정보를 몇개 있는지 보여주는 기능에 매물 정보와 결합하여 매물 관련 지도 기능으로 제공했다.
-<br/><br/>
-## 04. 개발 결과
-### ✅ 개발환경 및 전체 시스템 구조도
-![whereIsMyHome_architecture](https://user-images.githubusercontent.com/67596451/230403327-5362e05a-87e2-411a-a070-3880c83529c6.JPG)
-<br/><br/>
-### ✅ 화면 흐름도(주요 화면)
-### JSoup을 이용한 뉴스 크롤링
-NAVER의 부동산 뉴스의 핫이슈를 실시간으로 정적페이지를 크롤링 하여 뉴스의 제목 과 썸네일을 보여준다. 또한 해당 카드의 클릭 이벤트를 통해 뉴스를 보러 갈 수 있다.
-<br/><br/>
-![news](https://user-images.githubusercontent.com/67596451/230405082-ea952e23-8562-475d-8f89-704bda2fc17c.JPG)
+---
 
-### 가격 변동 그래프
-2015년도부터 2022년까지의 매물의 가격 정보를 토대로 가격 변동 그래프를 보여준다. 변동의 정도에 따라 색깔의 변화로 주고 있다.
-<br/><br/>
-![graph](https://user-images.githubusercontent.com/67596451/230405097-1a870e4b-7a00-4946-9cd8-20e6bbe79860.JPG)
+## 1) 기술 스택
 
-### 관심 아파트
-유저가 등록한 관심 아파트를 spring에 요청하여 DB에 있는 정보를 받아와서 vuetify의 data-table을 통해 보여준다.
-<br/><br/>
-![interestAPT](https://user-images.githubusercontent.com/67596451/230405872-605edf4e-d736-4f0f-9019-17c62433441e.JPG)
+### Backend
+- **Java 17**
+- **Spring Boot 2.7.5**
+  - Spring Web (MVC)
+  - Embedded Tomcat
+  - Devtools
+- **MyBatis 2.2.2** (XML Mapper 기반)
+- **MariaDB JDBC Driver**
+- **Spring AOP**
+- **JWT (jjwt 0.9.1)**
+- **Swagger/Springfox 3.0.0**
+- **JSoup 1.14.2** (뉴스 크롤링)
 
+### View / Frontend (서버 렌더링)
+- **JSP + JSTL**
+- 정적 리소스: HTML/CSS/JavaScript
+- UI 라이브러리: Bootstrap, AOS, Swiper, Boxicons 등(프로젝트 내 static vendor assets)
 
-### KaKao Map을 통한 지도 표시
-Kaokao map api를 활용하여 주변 상권의 기능 및 마커를 확인할 수 있다. 각 마커에 따라 mouseover, mouseleave, click 이벤트로 매물 아파트 명 info 띄우고 상세 매물을 확인할 수 있다.
-<br/><br/>
-![kakaomap](https://user-images.githubusercontent.com/67596451/230405120-2805e327-607f-4d22-88df-194e85a33239.JPG)
+### Data / Infra
+- **MariaDB**
+- SQL 스키마/초기 데이터: `db.sql`
 
+---
 
-## 05. 기대효과
-- 부동산 썸네일과 제목을 통해 요즘의 주요 이슈들을 빠르게 파악
-- 매물에 대한 가격 변동 그래프를 시각적으로 시세 동향을 빠르게 파악
-- 관심 매물 등록을 통해 원하는 아파트 매물을 주시
-- 카카오 맵을 활용하여 빠르게 매물 위치 파악
+## 2) 프로젝트 구조
 
-<br/><br/>
+```text
+src/main/java/com/ssafy/live
+├── config           # WebMvc, Swagger 설정
+├── controller       # 사용자/아파트/게시판/관리자/뉴스 API 및 페이지 라우팅
+├── dto              # 도메인 모델
+├── interceptor      # 로그인 인증 인터셉터
+├── model
+│   ├── mapper       # MyBatis Mapper 인터페이스
+│   └── service      # 비즈니스 로직
+└── aop              # 로깅 등 공통 관심사
+
+src/main/resources
+├── application.properties  # 서버/DB/MyBatis/ViewResolver 설정
+├── mapper/*.xml            # MyBatis SQL 매퍼
+└── static                  # CSS/JS/이미지 등 정적 파일
+
+src/main/webapp/WEB-INF/views
+└── *.jsp                   # 화면(JSP)
+```
+
+---
+
+## 3) 로컬 실행 방법 (상세)
+
+### 3-1. 사전 준비
+
+아래가 설치되어 있어야 합니다.
+
+1. **JDK 17**
+2. **Maven 3.8+** (또는 프로젝트에 맞는 Maven)
+3. **MariaDB 10.x**
+
+버전 확인 예시:
+
+```bash
+java -version
+mvn -v
+mysql --version
+```
+
+---
+
+### 3-2. 데이터베이스 준비
+
+1. MariaDB 서버 실행
+2. 루트(또는 권한이 있는 계정)로 접속 후 스키마/테이블/샘플 데이터 생성
+
+```bash
+mysql -u root -p < db.sql
+```
+
+기본 SQL은 `homedb` 데이터베이스를 생성/사용합니다.
+
+---
+
+### 3-3. 애플리케이션 설정
+
+`src/main/resources/application.properties`의 DB 접속 정보를 본인 환경에 맞게 수정합니다.
+
+```properties
+spring.datasource.url=jdbc:mariadb://127.0.0.1/homedb?serverTimezone=UTC
+spring.datasource.username=root
+spring.datasource.password=123456
+```
+
+> 기본 포트는 `8080`입니다.
+
+필요 시 다음도 확인하세요.
+- `server.port`
+- `mybatis.mapper-locations`
+- JSP ViewResolver (`spring.mvc.view.prefix/suffix`)
+
+---
+
+### 3-4. 애플리케이션 실행
+
+#### 방법 A) Maven으로 바로 실행
+
+```bash
+mvn spring-boot:run
+```
+
+#### 방법 B) 패키징 후 실행
+
+```bash
+mvn clean package
+java -jar target/live2-0.0.1-SNAPSHOT.jar
+```
+
+실행 후 접속:
+- **http://localhost:8080/**
+
+---
+
+### 3-5. 주요 기능 확인 포인트
+
+- 회원가입/로그인/회원정보 관리
+- 아파트 조회 및 관심 매물 등록
+- 게시판 CRUD
+- 네이버 부동산 뉴스 크롤링 정보 확인
+- 카카오맵 기반 위치 시각화
+
+> 카카오맵 API 사용 화면은 JSP 내 스크립트 키 설정 상태에 따라 동작 여부가 달라질 수 있습니다.
+
+---
+
+## 4) 개발/운영 참고 사항
+
+- 본 프로젝트는 **JSP 서버 렌더링 기반** 구조입니다.
+- MyBatis XML SQL을 사용하므로, 쿼리 수정 시 `src/main/resources/mapper/*.xml`을 함께 관리하세요.
+- DB 계정/비밀번호는 로컬 개발 환경 기준이므로 운영 배포 시 환경변수 또는 별도 설정 파일로 분리하는 것을 권장합니다.
+
+---
+
+## 5) 빠른 트러블슈팅
+
+### Q1. 실행 시 DB 연결 오류가 발생합니다.
+- MariaDB가 실행 중인지 확인
+- `application.properties`의 URL/계정/비밀번호 확인
+- `homedb` 및 테이블이 실제 생성되었는지 확인 (`db.sql` 재적용)
+
+### Q2. JSP 관련 오류가 발생합니다.
+- `tomcat-embed-jasper`, `jstl` 의존성이 정상 다운로드되었는지 확인
+- 빌드 캐시 삭제 후 재빌드 (`mvn clean package`)
+
+### Q3. 지도/외부 데이터가 비정상입니다.
+- 카카오맵 API 키 유효성/도메인 등록 여부 확인
+- 외부 사이트 구조 변경 시 JSoup 크롤링 로직 점검
+
+---
+
+## 6) 실행 명령어 요약
+
+```bash
+# 1) DB 초기화
+mysql -u root -p < db.sql
+
+# 2) 앱 실행
+mvn spring-boot:run
+
+# 3) 패키징 실행
+mvn clean package
+java -jar target/live2-0.0.1-SNAPSHOT.jar
+```
