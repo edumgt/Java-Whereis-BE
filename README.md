@@ -1,4 +1,4 @@
-# 🏡 WhereIsMyHome (Whereis-BE)
+# Spring Boot 3 Example
 
 공공 데이터(아파트 실거래/행정동 코드)와 외부 서비스(카카오맵, 네이버 부동산 뉴스)를 활용해 **아파트 정보 조회, 관심 매물 관리, 게시판, 회원 기능**을 제공하는 Spring Boot 기반 웹 애플리케이션입니다.
 
