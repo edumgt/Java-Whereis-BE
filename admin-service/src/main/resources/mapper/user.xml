@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.live.admin.model.mapper.UserMapper">
+
+	<resultMap type="User" id="AdminUserAll">
+		<result column="user_id" property="userId"/>
+		<result column="user_name" property="userName"/>
+		<result column="user_password" property="userPwd"/>
+		<result column="email_id" property="emailId"/>
+		<result column="email_domain" property="emailDomain"/>
+		<result column="manager" property="manager"/>
+	</resultMap>
+
+	<select id="selectAll" resultMap="AdminUserAll">
+		select user_name, user_id, user_password, email_id, email_domain, manager
+		from user
+	</select>
+
+	<delete id="delete" parameterType="string">
+		delete from user where user_id = #{userId}
+	</delete>
+
+	<update id="changePermission">
+		update user set manager = #{manager} where user_id = #{userId}
+	</update>
+
+</mapper>
