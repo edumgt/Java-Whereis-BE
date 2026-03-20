@@ -18,5 +18,84 @@ services:
       timeout: 5s
       retries: 20
 
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    container_name: whereis-user-service
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      SERVER_PORT: 8081
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/homedb?serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 123456
+    depends_on:
+      mariadb:
+        condition: service_healthy
+
+  apt-service:
+    build:
+      context: ./apt-service
+      dockerfile: Dockerfile
+    container_name: whereis-apt-service
+    restart: unless-stopped
+    ports:
+      - "8082:8082"
+    environment:
+      SERVER_PORT: 8082
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/homedb?serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 123456
+    depends_on:
+      mariadb:
+        condition: service_healthy
+
+  board-service:
+    build:
+      context: ./board-service
+      dockerfile: Dockerfile
+    container_name: whereis-board-service
+    restart: unless-stopped
+    ports:
+      - "8083:8083"
+    environment:
+      SERVER_PORT: 8083
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/homedb?serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 123456
+    depends_on:
+      mariadb:
+        condition: service_healthy
+
+  admin-service:
+    build:
+      context: ./admin-service
+      dockerfile: Dockerfile
+    container_name: whereis-admin-service
+    restart: unless-stopped
+    ports:
+      - "8084:8084"
+    environment:
+      SERVER_PORT: 8084
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/homedb?serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 123456
+    depends_on:
+      mariadb:
+        condition: service_healthy
+
+  news-service:
+    build:
+      context: ./news-service
+      dockerfile: Dockerfile
+    container_name: whereis-news-service
+    restart: unless-stopped
+    ports:
+      - "8085:8085"
+    environment:
+      SERVER_PORT: 8085
+
 volumes:
   mariadb-data:

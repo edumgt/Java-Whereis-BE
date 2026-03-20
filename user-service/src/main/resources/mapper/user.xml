@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.live.user.model.mapper.UserMapper">
+
+	<resultMap type="User" id="user">
+		<result column="user_id" property="userId"/>
+		<result column="user_name" property="userName"/>
+	</resultMap>
+
+	<resultMap type="User" id="userAll" extends="user">
+		<result column="user_password" property="userPwd"/>
+		<result column="email_id" property="emailId"/>
+		<result column="email_domain" property="emailDomain"/>
+		<result column="manager" property="manager"/>
+	</resultMap>
+
+	<resultMap type="User" id="AdminUserAll" extends="user">
+		<result column="user_id" property="userId"/>
+		<result column="user_password" property="userPwd"/>
+		<result column="email_id" property="emailId"/>
+		<result column="email_domain" property="emailDomain"/>
+		<result column="manager" property="manager"/>
+	</resultMap>
+
+	<select id="login" parameterType="map" resultMap="user">
+		select user_id, user_name, manager
+		from user
+		where user_id = #{id} and user_password = #{pwd}
+	</select>
+
+	<insert id="regist" parameterType="User">
+		insert into user (user_id, user_name, user_password, email_id, email_domain)
+		values (#{userId}, #{userName}, #{userPwd}, #{emailId}, #{emailDomain})
+	</insert>
+
+	<select id="findId" resultType="string">
+		select user_id from user
+		where user_name=#{userName} and email_id = #{emailId} and email_domain = #{emailDomain}
+	</select>
+
+	<select id="findPwd" resultType="string">
+		select user_password from user
+		where user_id=#{userId} and email_id = #{emailId} and email_domain = #{emailDomain}
+	</select>
+
+	<select id="confirm" parameterType="string" resultMap="userAll">
+		select user_id, user_name, email_id, email_domain, user_password
+		from user where user_id=#{userId}
+	</select>
+
+	<update id="update" parameterType="User">
+		update user
+		<trim prefix="set" suffixOverrides=",">
+			<if test="userPwd != null">user_password = #{userPwd},</if>
+			<if test="userName != null">user_name = #{userName},</if>
+			<if test="emailId != null">email_id = #{emailId},</if>
+			<if test="emailDomain != null">email_domain = #{emailDomain},</if>
+		</trim>
+		where user_id = #{userId}
+	</update>
+
+	<delete id="delete" parameterType="string">
+		delete from user where user_id = #{userId}
+	</delete>
+
+	<select id="selectAll" resultMap="AdminUserAll">
+		select user_name, user_id, user_password, email_id, email_domain, manager
+		from user
+	</select>
+
+	<update id="changePermission">
+		update user set manager = #{manager} where user_id = #{userId}
+	</update>
+
+</mapper>
